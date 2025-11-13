@@ -1,0 +1,11 @@
+unsloth 
+torch 
+transformers 
+peft datasets 
+huggingface 
+gdown 
+wandb 
+bitsandbytes 
+trl 
+accelerate
+setuptools

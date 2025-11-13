@@ -1,0 +1,10 @@
+So download from HF like this: 
+uv run python - <<'EOF'
+from huggingface_hub import snapshot_download
+snapshot_download("orlandowhite/120b_sft", local_dir="uni_sft_model", local_dir_use_symlinks=False)
+EOF
+
+
+upload to HF like this: hf upload orlandowhite/120b_sft outputs/checkpoint-1370
+
+download dataset to get started
