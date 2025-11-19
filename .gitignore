@@ -1,0 +1,5 @@
+dataset.jsonl
+.env
+.trae/
+__pycache__/
+wandb/

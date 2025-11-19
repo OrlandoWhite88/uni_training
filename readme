@@ -1,0 +1,64 @@
+So download from HF like this: 
+uv run python - <<'EOF'
+from huggingface_hub import snapshot_download
+snapshot_download("orlandowhite/120b_sft", local_dir="uni_sft_model", local_dir_use_symlinks=False)
+EOF
+
+
+upload to HF like this: hf upload orlandowhite/120b_sft outputs/checkpoint-1370
+
+download dataset to get started
+
+
+
+LLM Notes:
+## Files
+
+- `format_data.py` - Converts raw dataset to Harmony format (without reasoning)
+- `add_reasoning.py` - Uses OpenAI Responses API to add reasoning and adjust confidence
+- `dataset.jsonl` - Original dataset
+- `dataset_formatted.jsonl` - Formatted dataset (no reasoning)
+- `dataset_with_reasoning.jsonl` - Final dataset with reasoning
+
+
+## Dataset Format
+
+### Harmony Format for gpt-oss Models
+
+The gpt-oss models use the **Harmony response format** which includes:
+
+- **developer/system**: Custom instructions for the model
+- **user**: Input to the model
+- **assistant**: Output with two special fields:
+  - `content`: The final JSON response to the user
+  - `thinking`: The model's chain-of-thought reasoning process
+
+### Correct Example Structure
+
+```json
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "HS CODE CLASSIFICATION EXPERT SYSTEM...",
+      "thinking": null
+    },
+    {
+      "role": "user",
+      "content": "{\"task\": \"score_candidate\", \"data\": {...}}",
+      "thinking": null
+    },
+    {
+      "role": "assistant",
+      "content": "{\"option_number\": 1, \"confidence\": 0.87}",
+      "thinking": "First, I analyze the product description against the tariff text. The product characteristics align strongly with this option because... The confidence of 0.87 falls in the Threshold range (0.85-0.89) which means we can proceed with this classification."
+    }
+  ]
+}
+```
+
+**Key Points:**
+- System and user messages have `"thinking": null`
+- Assistant messages have reasoning in the `thinking` field
+- The `content` field contains the final JSON output
+- Confidence scores (0.50-1.00) must align with the framework in the system prompt
